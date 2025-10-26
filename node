@@ -1,0 +1,16 @@
+#!/bin/bash
+
+case "$1" in
+    --version|-v|--help|-h)
+        echo "v25.0.0"
+        exit 0
+        ;;
+    -e|--eval)
+        # Handle inline eval scripts (e.g., node -e "console.log('test')")
+        exec bun run "$@"
+        ;;
+    *)
+        # Forward all other commands to bun
+        exec bun "$@"
+        ;;
+esac
