@@ -1,0 +1,16 @@
+#!/bin/bash
+
+case "$1" in
+    --version|-v|--help|-h|version)
+        echo "11.6.2"
+        exit 0
+        ;;
+    install|i|add|ci|install-ci-test|fund|publish|pack|run|start|test)
+        # Forward common npm package management commands to bun
+        exec bun "$@"
+        ;;
+    *)
+        # Forward all other commands to bun
+        exec bun "$@"
+        ;;
+esac
