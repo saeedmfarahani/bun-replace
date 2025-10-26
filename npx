@@ -1,0 +1,12 @@
+#!/bin/bash
+
+case "$1" in
+    --version|-v|--help|-h)
+        echo "11.6.2"
+        exit 0
+        ;;
+    *)
+        # Forward all other commands to bunx
+        exec bunx "$@"
+        ;;
+esac
