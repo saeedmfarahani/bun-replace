@@ -1,11 +1,42 @@
 #!/usr/bin/env bash
+#
+# bun-replace installer
+# ======================
+#
+# Replaces `node`, `npm`, and `npx` with `bun` and `bunx` by downloading
+# shell wrapper scripts from the bun-replace GitHub repository.
+#
+# What this script does:
+#   1. Downloads 3 scripts (node, npm, npx) from the repo
+#   2. Installs them to ~/bin (or $BUN_REPLACE_INSTALL if set)
+#   3. Makes them executable
+#   4. Adds the install directory to your PATH in your shell config
+#
+# The scripts themselves simply forward all commands to `bun`/`bunx`
+# while reporting standard version strings for compatibility.
+#
+# Environment variables:
+#   BUN_REPLACE_INSTALL  - custom install directory (default: $HOME/bin)
+#   GITHUB               - custom GitHub host (default: https://github.com)
+#
+# Source: https://github.com/saeedtahmtan/bun-replace
+# License: GPL-3.0
+#
+# Usage:  curl -fsSL https://raw.githubusercontent.com/saeedtahmtan/bun-replace/main/install.sh | bash
+
 set -euo pipefail
 
+# ------------------------------------------------------------------
+# Platform check — Windows is not supported (use WSL instead)
+# ------------------------------------------------------------------
 if [[ ${OS:-} = Windows_NT ]]; then
   echo "Windows is not supported yet. Please use WSL or copy the scripts manually."
   exit 1
 fi
 
+# ------------------------------------------------------------------
+# Terminal color support — only enable when stdout is a TTY
+# ------------------------------------------------------------------
 Color_Off=''
 Red=''
 Green=''
@@ -22,6 +53,9 @@ if [[ -t 1 ]]; then
     Bold_White='\033[1m'
 fi
 
+# ------------------------------------------------------------------
+# Output helpers
+# ------------------------------------------------------------------
 error() {
     echo -e "${Red}error${Color_Off}:" "$@" >&2
     exit 1
@@ -39,10 +73,18 @@ success() {
     echo -e "${Green}$@ ${Color_Off}"
 }
 
+# ------------------------------------------------------------------
+# Source repo configuration
+# These can be overridden via environment variables (e.g. GITHUB)
+# so power users can test against forks or mirror hosts.
+# ------------------------------------------------------------------
 GITHUB=${GITHUB-"https://github.com"}
 REPO="${GITHUB}/saeedtahmtan/bun-replace"
 BRANCH="main"
 
+# ------------------------------------------------------------------
+# Install directory — defaults to ~/bin, overridable via env var
+# ------------------------------------------------------------------
 install_dir="${BUN_REPLACE_INSTALL:-$HOME/bin}"
 bin_dir="$install_dir"
 
@@ -51,6 +93,9 @@ if [[ ! -d $bin_dir ]]; then
         error "Failed to create install directory \"$bin_dir\""
 fi
 
+# ------------------------------------------------------------------
+# Download each script from GitHub and make it executable
+# ------------------------------------------------------------------
 for script in node npm npx; do
     uri="$REPO/raw/$BRANCH/$script"
     info "Downloading $script..."
@@ -60,6 +105,9 @@ for script in node npm npx; do
         error "Failed to set permissions on $script"
 done
 
+# ------------------------------------------------------------------
+# Helper: replace $HOME with ~ for prettier path display
+# ------------------------------------------------------------------
 tildify() {
     if [[ $1 = $HOME/* ]]; then
         local replacement=\~/
@@ -78,7 +126,13 @@ if [[ $quoted_install_dir = \"$HOME/* ]]; then
     quoted_install_dir=${quoted_install_dir/$HOME\//\$HOME/}
 fi
 
+# ------------------------------------------------------------------
+# Detect the user's shell and add the install directory to PATH
+# Supports bash, zsh, and fish. Falls back to printing instructions.
+# ------------------------------------------------------------------
 case $(basename "${SHELL:-}") in
+
+# Fish shell
 fish)
     commands=(
         "set --export BUN_REPLACE_INSTALL $quoted_install_dir"
@@ -104,6 +158,8 @@ fish)
         done
     fi
     ;;
+
+# Zsh
 zsh)
     commands=(
         "export BUN_REPLACE_INSTALL=$quoted_install_dir"
@@ -129,6 +185,8 @@ zsh)
         done
     fi
     ;;
+
+# Bash
 bash)
     commands=(
         "export BUN_REPLACE_INSTALL=$quoted_install_dir"
@@ -174,6 +232,8 @@ bash)
         done
     fi
     ;;
+
+# Unknown shell — print manual instructions
 *)
     echo "Manually add the directory to ~/.bashrc (or similar):"
     info_bold "  export BUN_REPLACE_INSTALL=$quoted_install_dir"
@@ -181,6 +241,9 @@ bash)
     ;;
 esac
 
+# ------------------------------------------------------------------
+# Print verification steps
+# ------------------------------------------------------------------
 echo
 info "To verify, run:"
 echo
