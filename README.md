@@ -1,31 +1,53 @@
-# Bun Replacements for Node, NPM, and NPX
+# 🚀 Bun Replacements for Node, NPM, and NPX
 
-This repository provides shell scripts to replace `node`, `npm`, and `npx` with `bun` and `bunx` for faster JavaScript workflows. The scripts mimic version outputs for compatibility with tools/scripts that check Node/npm versions.
+Replace `node`, `npm`, and `npx` with `bun` and `bunx` for faster JavaScript workflows. These shell scripts mimic version outputs so tools/scripts that check versions still work. ✨
 
-## Features
-- Mimics Node.js v26.2.0 and npm v11.16.0 for `--version`, `-v`, `--help`, etc.
-- Forwards all other commands to `bun`/`bunx`.
-- Handles common flags like `-e` for inline eval in Node.
-- Scripts named `node`, `npm`, `npx` (no `.sh` for seamless replacement).
+## ⚡ Quick Install
 
-## Latest Versions
-- Node.js: v26.2.0
-- npm/npx: 11.16.0
-- Bun: 1.3.14
+```bash
+curl -fsSL https://raw.githubusercontent.com/saeedtahmtan/bun-replace/main/install.sh | bash
+```
 
-## Setup
-1. Install Bun: `curl -fsSL https://bun.sh/install | bash`
-2. Save scripts as `node`, `npm`, `npx` in `~/bin` (create if needed).
-3. Make executable: `chmod +x ~/bin/node ~/bin/npm ~/bin/npx`
-4. Add to PATH in `~/.bashrc` or `~/.zshrc`: `export PATH="$HOME/bin:$PATH"`
-5. Reload shell: `source ~/.bashrc`
-6. Test: `node --version` (should output `v26.2.0`)
+This will download the scripts to `~/bin` and add them to your `PATH`.
 
-## Scripts
-- `node`: Replaces `node` with `bun`.
-- `npm`: Replaces `npm` with `bun` (for package management).
-- `npx`: Replaces `npx` with `bunx`.
+## 📦 What You Get
 
-## Compatibility Notes
-- Bun is highly compatible, but test complex Node APIs.
-- Update version strings in scripts for future releases.
+| Command | Replaces With | Reported Version |
+|---------|---------------|------------------|
+| `node`  | `bun`         | v26.2.0          |
+| `npm`   | `bun`         | 11.16.0          |
+| `npx`   | `bunx`        | 11.16.0          |
+
+## ✨ Features
+
+- ✅ **Drop-in replacement** — scripts named `node`, `npm`, `npx` (no `.sh` extension)
+- ✅ **Version spoofing** — `--version`, `-v`, `--help` report expected versions
+- ✅ **Fully transparent** — all other flags and args forwarded to `bun`/`bunx`
+- ✅ **Node eval support** — `node -e "console.log('hi')"` works via `bun run`
+- ✅ **npm commands** — `install`, `add`, `publish`, `run`, `start`, `test`, etc. all forwarded to `bun`
+
+## 🔧 Manual Install
+
+```bash
+mkdir -p ~/bin
+cp node npm npx ~/bin/
+chmod +x ~/bin/node ~/bin/npm ~/bin/npx
+```
+
+Add to your shell config:
+
+```bash
+export PATH="$HOME/bin:$PATH"
+```
+
+## 📋 Latest Versions
+
+- **Node.js**: v26.2.0
+- **npm/npx**: 11.16.0
+- **Bun**: 1.3.14
+
+## ⚠️ Compatibility Notes
+
+- Bun is highly compatible with Node.js APIs, but test complex projects thoroughly
+- Some Node.js-specific flags or behaviors may differ
+- Update version strings in the scripts for future releases
