@@ -3,15 +3,15 @@
 This repository provides shell scripts to replace `node`, `npm`, and `npx` with `bun` and `bunx` for faster JavaScript workflows. The scripts mimic version outputs for compatibility with tools/scripts that check Node/npm versions.
 
 ## Features
-- Mimics Node.js v25.0.0 and npm v11.6.2 for `--version`, `-v`, `--help`, etc.
+- Mimics Node.js v26.2.0 and npm v11.16.0 for `--version`, `-v`, `--help`, etc.
 - Forwards all other commands to `bun`/`bunx`.
 - Handles common flags like `-e` for inline eval in Node.
 - Scripts named `node`, `npm`, `npx` (no `.sh` for seamless replacement).
 
 ## Latest Versions
-- Node.js: v25.0.0
-- npm/npx: 11.6.2
-- Bun: 1.3.1
+- Node.js: v26.2.0
+- npm/npx: 11.16.0
+- Bun: 1.3.14
 
 ## Setup
 1. Install Bun: `curl -fsSL https://bun.sh/install | bash`
@@ -19,7 +19,7 @@ This repository provides shell scripts to replace `node`, `npm`, and `npx` with 
 3. Make executable: `chmod +x ~/bin/node ~/bin/npm ~/bin/npx`
 4. Add to PATH in `~/.bashrc` or `~/.zshrc`: `export PATH="$HOME/bin:$PATH"`
 5. Reload shell: `source ~/.bashrc`
-6. Test: `node --version` (should output `v25.0.0`)
+6. Test: `node --version` (should output `v26.2.0`)
 
 ## Scripts
 - `node`: Replaces `node` with `bun`.
